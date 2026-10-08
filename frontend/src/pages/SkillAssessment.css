@@ -1,0 +1,109 @@
+.assessment-page {
+  min-height: 100vh;
+  background: #f8fafc;
+  padding: 80px 20px;
+}
+
+.assessment-container {
+  max-width: 850px;
+  margin: auto;
+  text-align: center;
+}
+
+.assessment-label {
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.assessment-container h1 {
+  font-size: 42px;
+  color: #172033;
+  margin: 10px 0;
+}
+
+.target-career {
+  color: #64748b;
+  font-size: 18px;
+  margin-bottom: 40px;
+}
+
+.assessment-card {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  text-align: left;
+}
+
+.assessment-card h2 {
+  color: #172033;
+  margin-bottom: 8px;
+}
+
+.assessment-card > p {
+  color: #64748b;
+  margin-bottom: 30px;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.skill-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #334155;
+  transition: 0.2s;
+}
+
+.skill-option:hover {
+  border-color: #2563eb;
+  background: #f8fbff;
+}
+
+.skill-option input {
+  width: 18px;
+  height: 18px;
+}
+
+.continue-btn {
+  margin-top: 35px;
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.continue-btn:hover {
+  background: #1d4ed8;
+}
+
+@media (max-width: 600px) {
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .assessment-card {
+    padding: 25px;
+  }
+
+  .assessment-container h1 {
+    font-size: 32px;
+  }
+}
