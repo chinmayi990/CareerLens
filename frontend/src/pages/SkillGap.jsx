@@ -1,385 +1,519 @@
-import { useLocation } from "react-router-dom";
+import { useMemo } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import careerData from "../data/careerData";
 import "./SkillGap.css";
 
 function SkillGap() {
-
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const career = location.state?.career;
-  const selectedSkills = location.state?.selectedSkills || [];
+  const {
+    career,
+    selectedSkills = [],
+  } = location.state || {};
 
-  const careerSkills = {
+  const careerInfo = careerData[career];
 
-    "Data Analyst": [
-      "Excel",
-      "SQL",
-      "Python",
-      "Pandas",
-      "Statistics",
-      "Data Visualization",
-      "Power BI",
-      "Tableau",
-      "Data Cleaning",
-      "MySQL"
-    ],
+  if (!careerInfo) {
+    return (
+      <div className="skill-gap-page">
+        <div className="skill-gap-error">
+          <h2>Assessment data not found</h2>
 
-    "Data Scientist": [
-      "Python",
-      "SQL",
-      "Statistics",
-      "Probability",
-      "Pandas",
-      "NumPy",
-      "Matplotlib",
-      "Seaborn",
-      "Machine Learning",
-      "Scikit-learn",
-      "Regression",
-      "Classification",
-      "Clustering",
-      "Data Visualization",
-      "Feature Engineering"
-    ],
+          <p>
+            Please select a career and complete the
+            skill assessment first.
+          </p>
 
-    "ML Engineer": [
-      "Python",
-      "SQL",
-      "Machine Learning",
-      "Scikit-learn",
-      "TensorFlow",
-      "PyTorch",
-      "Deep Learning",
-      "CNN",
-      "Statistics",
-      "Feature Engineering",
-      "Git",
-      "GitHub",
-      "API Development",
-      "Docker"
-    ],
+          <button
+            onClick={() => navigate("/careers")}
+          >
+            ← Choose a Career
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-    "AI Engineer": [
-      "Python",
-      "Artificial Intelligence",
-      "Machine Learning",
-      "Deep Learning",
-      "TensorFlow",
-      "PyTorch",
-      "Natural Language Processing",
-      "Computer Vision",
-      "Transformers",
-      "LLMs",
-      "Generative AI",
-      "RAG",
-      "API Development",
-      "Git",
-      "GitHub"
-    ]
+  const requiredSkills = careerInfo.skills;
 
-  };
-
-  const requiredSkills = careerSkills[career] || [];
+  const acquiredSkills = requiredSkills.filter(
+    (skill) => selectedSkills.includes(skill)
+  );
 
   const missingSkills = requiredSkills.filter(
     (skill) => !selectedSkills.includes(skill)
   );
 
-
-  // Learning recommendations for each skill
-
-  const recommendations = {
-
-    "Python":
-      "Practice Python programming, functions, OOP and problem solving.",
-
-    "SQL":
-      "Practice SELECT, JOIN, GROUP BY, subqueries and window functions.",
-
-    "Statistics":
-      "Learn probability, distributions, hypothesis testing and statistical inference.",
-
-    "Probability":
-      "Study probability rules, conditional probability and common distributions.",
-
-    "Pandas":
-      "Practice data cleaning, filtering, grouping and data manipulation using Pandas.",
-
-    "NumPy":
-      "Learn arrays, indexing, vectorized operations and numerical computing.",
-
-    "Matplotlib":
-      "Practice creating charts and visualizing data using Matplotlib.",
-
-    "Seaborn":
-      "Learn statistical visualization and create informative plots using Seaborn.",
-
-    "Machine Learning":
-      "Learn supervised and unsupervised learning algorithms and model evaluation.",
-
-    "Scikit-learn":
-      "Practice building, training and evaluating machine learning models.",
-
-    "Regression":
-      "Learn linear regression, multiple regression and model evaluation.",
-
-    "Classification":
-      "Practice classification algorithms such as Logistic Regression, Decision Trees and Random Forest.",
-
-    "Clustering":
-      "Learn unsupervised clustering techniques such as K-Means and hierarchical clustering.",
-
-    "Data Visualization":
-      "Practice choosing appropriate charts and communicating insights clearly.",
-
-    "Feature Engineering":
-      "Learn how to create, transform and select useful features for machine learning models.",
-
-    "Excel":
-      "Practice formulas, pivot tables, charts and data analysis in Excel.",
-
-    "Power BI":
-      "Learn Power Query, data modeling, DAX and dashboard creation.",
-
-    "Tableau":
-      "Practice interactive dashboards, calculated fields and data visualization.",
-
-    "Data Cleaning":
-      "Learn how to handle missing values, duplicates, outliers and inconsistent data.",
-
-    "Deep Learning":
-      "Learn neural networks, backpropagation and deep learning architectures.",
-
-    "TensorFlow":
-      "Practice building and training neural networks using TensorFlow.",
-
-    "PyTorch":
-      "Learn tensors, neural networks and model training using PyTorch.",
-
-    "Git":
-      "Learn version control, commits, branches and collaborative workflows.",
-
-    "GitHub":
-      "Practice repositories, pull requests, issues and GitHub collaboration.",
-
-    "API Development":
-      "Learn how to build REST APIs and connect frontend applications with backend services.",
-
-    "Docker":
-      "Learn containers, Dockerfiles and how to package applications.",
-
-    "Natural Language Processing":
-      "Learn text preprocessing, embeddings, classification and language models.",
-
-    "Computer Vision":
-      "Learn image processing, CNNs and computer vision techniques.",
-
-    "Transformers":
-      "Learn attention mechanisms and transformer-based language and vision models.",
-
-    "LLMs":
-      "Learn how large language models work and how to build applications using them.",
-
-    "Generative AI":
-      "Learn prompting, embeddings, RAG and generative AI application development.",
-
-    "RAG":
-      "Learn retrieval-augmented generation using embeddings and vector databases.",
-
-    "Artificial Intelligence":
-      "Learn AI fundamentals, search, reasoning and intelligent systems."
-
-  };
-
-
-  // Calculate career readiness
-
   const readiness =
     requiredSkills.length > 0
       ? Math.round(
-          (selectedSkills.length / requiredSkills.length) * 100
+          (acquiredSkills.length /
+            requiredSkills.length) *
+            100
         )
       : 0;
 
+  const skillLevel = useMemo(() => {
+    if (readiness >= 80) {
+      return {
+        title: "Excellent Progress!",
+        description:
+          "You already have most of the skills required for this career.",
+        className: "excellent",
+      };
+    }
+
+    if (readiness >= 60) {
+      return {
+        title: "Good Progress!",
+        description:
+          "You have a strong foundation. Focus on the remaining skills.",
+        className: "good",
+      };
+    }
+
+    if (readiness >= 40) {
+      return {
+        title: "You're Getting There!",
+        description:
+          "You have a foundation, but there are several skills to develop.",
+        className: "average",
+      };
+    }
+
+    return {
+      title: "Let's Build Your Foundation!",
+      description:
+        "Start with the missing skills and gradually build your career readiness.",
+      className: "beginner",
+    };
+  }, [readiness]);
+
+  const getRecommendation = (skill) => {
+    const recommendations = {
+      Python:
+        "Practice Python programming through small projects, coding exercises and real-world datasets.",
+
+      SQL:
+        "Practice SELECT, JOIN, GROUP BY, subqueries and window functions using real datasets.",
+
+      Statistics:
+        "Learn descriptive statistics, probability, hypothesis testing and statistical distributions.",
+
+      Probability:
+        "Study probability concepts and solve practical probability problems.",
+
+      NumPy:
+        "Practice arrays, indexing, vectorized operations and numerical computations.",
+
+      Pandas:
+        "Work with real datasets and practice cleaning, filtering, grouping and data transformation.",
+
+      Matplotlib:
+        "Create charts and visualizations from real datasets using Matplotlib.",
+
+      Seaborn:
+        "Build statistical visualizations and explore relationships between variables.",
+
+      "Machine Learning":
+        "Build beginner ML projects using regression, classification and clustering algorithms.",
+
+      "Deep Learning":
+        "Learn neural networks and build simple image or text classification projects.",
+
+      TensorFlow:
+        "Build neural-network projects and practice model training using TensorFlow.",
+
+      PyTorch:
+        "Learn tensors, neural networks and model training through practical projects.",
+
+      "Natural Language Processing":
+        "Practice text preprocessing, classification and sentiment-analysis projects.",
+
+      "Computer Vision":
+        "Build image-processing and image-classification projects using OpenCV or deep learning.",
+
+      Transformers:
+        "Learn transformer architecture and experiment with modern NLP models.",
+
+      LLMs:
+        "Learn how large language models work and build applications using LLM APIs.",
+
+      "Generative AI":
+        "Build practical GenAI applications such as summarizers, assistants and content generators.",
+
+      RAG:
+        "Learn retrieval-augmented generation and build a document-question answering system.",
+
+      "Prompt Engineering":
+        "Practice structured prompts, few-shot examples and prompt evaluation techniques.",
+
+      "Vector Databases":
+        "Learn embeddings and build semantic-search applications using vector databases.",
+
+      LangChain:
+        "Build small LLM workflows using chains, agents and retrieval pipelines.",
+
+      React:
+        "Build interactive frontend projects and practice components, state and routing.",
+
+      JavaScript:
+        "Practice DOM manipulation, asynchronous programming, APIs and modern JavaScript.",
+
+      HTML:
+        "Build structured web pages and practice semantic HTML.",
+
+      CSS:
+        "Practice responsive layouts, Flexbox, Grid and modern UI design.",
+
+      "REST APIs":
+        "Build and consume APIs using HTTP methods, JSON and authentication.",
+
+      Docker:
+        "Containerize small applications and learn images, containers and Docker Compose.",
+
+      Git:
+        "Practice commits, branches, merges and collaborative Git workflows.",
+
+      GitHub:
+        "Create repositories, write good READMEs and practice GitHub collaboration.",
+
+      Excel:
+        "Practice formulas, pivot tables, data cleaning and dashboard creation.",
+
+      "Power BI":
+        "Build dashboards using Power Query, DAX and interactive visualizations.",
+
+      Tableau:
+        "Create interactive dashboards and practice data storytelling.",
+
+      "Data Visualization":
+        "Create dashboards and charts that communicate insights clearly.",
+
+      DAX:
+        "Practice calculated columns, measures, filter context and common DAX functions.",
+
+      "Data Cleaning":
+        "Work with messy datasets and practice handling missing values, duplicates and outliers.",
+
+      "Feature Engineering":
+        "Practice transforming raw data into meaningful features for machine learning models.",
+
+      "Scikit-learn":
+        "Build end-to-end ML projects using preprocessing, model training and evaluation.",
+
+      "Data Pipelines":
+        "Build ETL pipelines that collect, transform and move data between systems.",
+
+      "Data Warehousing":
+        "Learn dimensional modeling, fact tables, dimension tables and analytical databases.",
+
+      AWS:
+        "Learn core AWS services and deploy a small application to the cloud.",
+
+      Azure:
+        "Explore Azure compute, storage, databases and deployment services.",
+
+      Kubernetes:
+        "Learn containers, pods, deployments, services and basic Kubernetes operations.",
+
+      "Cybersecurity Fundamentals":
+        "Learn networking, authentication, common attacks and security principles.",
+
+      Networking:
+        "Study TCP/IP, DNS, HTTP, routing, ports and basic network security.",
+
+      Linux:
+        "Practice Linux commands, permissions, processes, networking and shell scripting.",
+
+      "Data Structures":
+        "Practice arrays, linked lists, stacks, queues, trees, graphs and hash tables.",
+
+      Algorithms:
+        "Practice searching, sorting, recursion, greedy algorithms and dynamic programming.",
+
+      "Object-Oriented Programming":
+        "Build projects using classes, objects, inheritance, abstraction and encapsulation.",
+
+      "System Design":
+        "Learn scalability, databases, caching, APIs and distributed-system fundamentals.",
+    };
+
+    return (
+      recommendations[skill] ||
+      `Build practical projects and complete hands-on exercises to improve your ${skill} skills.`
+    );
+  };
 
   return (
-
     <div className="skill-gap-page">
-
       <div className="skill-gap-container">
 
-        {/* Page Heading */}
+        {/* Header */}
 
-        <p className="skill-gap-label">
-          CAREER INSIGHTS
-        </p>
+        <div className="skill-gap-header">
 
-        <h1>
-          Skill Gap Analysis
-        </h1>
+          <button
+            className="skill-gap-back"
+            onClick={() =>
+              navigate(
+                `/assessment?career=${encodeURIComponent(
+                  career
+                )}`
+              )
+            }
+          >
+            ← Back to Assessment
+          </button>
 
-        <p className="career-name">
-          Target Career: <strong>{career}</strong>
-        </p>
+          <div className="skill-gap-icon">
+            {careerInfo.icon}
+          </div>
 
+          <p className="skill-gap-category">
+            {careerInfo.category}
+          </p>
 
-        {/* Career Readiness */}
+          <h1>
+            Your <span>Skill Gap</span>
+          </h1>
+
+          <p>
+            Here's how prepared you are for a career
+            as a <strong>{career}</strong>.
+          </p>
+
+        </div>
+
+        {/* Readiness */}
 
         <div className="readiness-card">
 
-          <div>
+          <div
+            className="readiness-circle"
+            style={{
+              "--progress": `${readiness}%`,
+            }}
+          >
+            <div>
+              <strong>{readiness}%</strong>
+              <span>Ready</span>
+            </div>
+          </div>
 
-            <h2>
-              Career Readiness
+          <div className="readiness-content">
+
+            <p className="section-label">
+              CAREER READINESS
+            </p>
+
+            <h2 className={skillLevel.className}>
+              {skillLevel.title}
             </h2>
 
             <p>
-              Based on the skills you selected.
+              {skillLevel.description}
             </p>
 
-          </div>
+            <div className="readiness-stats">
 
-          <div className="readiness-score">
-            {readiness}%
-          </div>
+              <div>
+                <strong>
+                  {acquiredSkills.length}
+                </strong>
 
-        </div>
+                <span>Skills You Have</span>
+              </div>
 
+              <div>
+                <strong>
+                  {missingSkills.length}
+                </strong>
 
-        {/* Your Skills */}
+                <span>Skills to Learn</span>
+              </div>
 
-        <div className="skills-section">
+              <div>
+                <strong>
+                  {requiredSkills.length}
+                </strong>
 
-          <h2>
-            Your Skills
-          </h2>
-
-          <div className="skill-list">
-
-            {selectedSkills.length > 0 ? (
-
-              selectedSkills.map((skill) => (
-
-                <span
-                  className="skill-badge"
-                  key={skill}
-                >
-                  ✓ {skill}
-                </span>
-
-              ))
-
-            ) : (
-
-              <p>
-                No skills selected.
-              </p>
-
-            )}
-
-          </div>
-
-        </div>
-
-
-        {/* Missing Skills */}
-
-        <div className="skills-section">
-
-          <h2>
-            Skills You Need to Improve
-          </h2>
-
-          <div className="skill-list">
-
-            {missingSkills.length > 0 ? (
-
-              missingSkills.map((skill) => (
-
-                <span
-                  className="missing-skill-badge"
-                  key={skill}
-                >
-                  + {skill}
-                </span>
-
-              ))
-
-            ) : (
-
-              <p>
-                🎉 You have selected all the required skills!
-              </p>
-
-            )}
-
-          </div>
-
-        </div>
-
-
-        {/* Recommended Learning */}
-
-        {missingSkills.length > 0 && (
-
-          <div className="recommendations-section">
-
-            <h2>
-              Recommended Learning
-            </h2>
-
-            <p className="recommendations-description">
-              Focus on these skills to improve your readiness
-              for your target career.
-            </p>
-
-
-            <div className="recommendation-grid">
-
-              {missingSkills.map((skill) => (
-
-                <div
-                  className="recommendation-card"
-                  key={skill}
-                >
-
-                  <div className="recommendation-icon">
-                    📚
-                  </div>
-
-                  <h3>
-                    {skill}
-                  </h3>
-
-                  <p>
-                    {recommendations[skill]}
-                  </p>
-
-                  <a
-                    className="learn-btn"
-                    href={`https://www.google.com/search?q=${encodeURIComponent(
-                      `${skill} tutorial for beginners`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Start Learning →
-                  </a>
-
-                </div>
-
-              ))}
+                <span>Total Skills</span>
+              </div>
 
             </div>
 
           </div>
 
-        )}
+        </div>
 
+        {/* Acquired Skills */}
+
+        <section className="gap-section">
+
+          <div className="gap-section-header">
+
+            <div>
+              <p className="section-label">
+                YOUR STRENGTHS
+              </p>
+
+              <h2>
+                Skills You Already Have
+              </h2>
+            </div>
+
+            <span className="skill-number acquired-number">
+              {acquiredSkills.length}
+            </span>
+
+          </div>
+
+          {acquiredSkills.length > 0 ? (
+            <div className="gap-skills-grid">
+
+              {acquiredSkills.map((skill) => (
+                <div
+                  className="gap-skill-card acquired"
+                  key={skill}
+                >
+                  <span className="gap-check">
+                    ✓
+                  </span>
+
+                  <span>{skill}</span>
+                </div>
+              ))}
+
+            </div>
+          ) : (
+            <div className="empty-skills">
+              No skills selected yet.
+            </div>
+          )}
+
+        </section>
+
+        {/* Missing Skills */}
+
+        <section className="gap-section">
+
+          <div className="gap-section-header">
+
+            <div>
+              <p className="section-label">
+                DEVELOPMENT AREAS
+              </p>
+
+              <h2>
+                Skills You Should Learn
+              </h2>
+            </div>
+
+            <span className="skill-number missing-number">
+              {missingSkills.length}
+            </span>
+
+          </div>
+
+          {missingSkills.length > 0 ? (
+            <div className="missing-skills-list">
+
+              {missingSkills.map((skill, index) => (
+                <div
+                  className="missing-skill-card"
+                  key={skill}
+                >
+
+                  <div className="missing-skill-top">
+
+                    <div className="missing-skill-name">
+
+                      <span className="priority-number">
+                        {index + 1}
+                      </span>
+
+                      <strong>
+                        {skill}
+                      </strong>
+
+                    </div>
+
+                    <span className="priority-label">
+                      {index < 3
+                        ? "HIGH PRIORITY"
+                        : "RECOMMENDED"}
+                    </span>
+
+                  </div>
+
+                  <p>
+                    {getRecommendation(skill)}
+                  </p>
+
+                </div>
+              ))}
+
+            </div>
+          ) : (
+            <div className="complete-message">
+
+              <span>🎉</span>
+
+              <div>
+
+                <strong>
+                  You have all the required skills!
+                </strong>
+
+                <p>
+                  You're ready to start building
+                  projects and applying for roles.
+                </p>
+
+              </div>
+
+            </div>
+          )}
+
+        </section>
+
+        {/* Action */}
+
+        <div className="skill-gap-action">
+
+          <div>
+
+            <strong>
+              Ready for the next step?
+            </strong>
+
+            <p>
+              Track your career progress from your dashboard.
+            </p>
+
+          </div>
+
+          <button
+            onClick={() =>
+              navigate("/dashboard", {
+                state: {
+                  career,
+                  selectedSkills,
+                  missingSkills,
+                  readiness,
+                },
+              })
+            }
+          >
+            Go to Dashboard →
+          </button>
+
+        </div>
 
       </div>
-
     </div>
-
   );
 }
 

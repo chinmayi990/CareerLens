@@ -6,10 +6,30 @@ html,
 body {
   margin: 0;
   padding: 0;
+
   min-width: 320px;
   min-height: 100%;
+
+  font-family: Arial, sans-serif;
 }
 
 body {
-  font-family: Arial, sans-serif;
+  background: #f8fafc;
+  color: #172033;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+body.dark-mode {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
 }

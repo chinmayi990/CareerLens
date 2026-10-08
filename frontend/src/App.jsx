@@ -1,34 +1,68 @@
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 
 import CareerSelection from "./pages/CareerSelection";
 import SkillAssessment from "./pages/SkillAssessment";
 import SkillGap from "./pages/SkillGap";
-function Home() {
+import Dashboard from "./pages/Dashboard";
+
+
+function Home({ darkMode, setDarkMode }) {
+
   return (
     <div className="app">
 
-      {/* Navigation Bar */}
+      {/* Navigation */}
+
       <nav className="navbar">
 
         <div className="logo">
           Career<span>Lens</span>
         </div>
 
+
         <div className="nav-links">
-          <Link to="/">Home</Link>
-          <Link to="/careers">Careers</Link>
-          <a href="#about">About</a>
+
+          <Link to="/">
+            Home
+          </Link>
+
+          <Link to="/careers">
+            Careers
+          </Link>
+
+          <Link to="/dashboard">
+            Dashboard
+          </Link>
+
+          <a href="#about">
+            About
+          </a>
+
+
+          {/* Theme Toggle */}
+
+          <button
+            className="theme-toggle"
+            onClick={() => setDarkMode(!darkMode)}
+            aria-label="Toggle dark mode"
+          >
+            {darkMode ? "☀️" : "🌙"}
+          </button>
+
 
           <button className="login-btn">
             Login
           </button>
+
         </div>
 
       </nav>
 
 
       {/* Hero Section */}
+
       <section className="hero">
 
         <div className="hero-text">
@@ -37,11 +71,13 @@ function Home() {
             YOUR CAREER. YOUR FUTURE.
           </p>
 
+
           <h1>
             Build Your Career
             <br />
             With <span>Confidence.</span>
           </h1>
+
 
           <p className="description">
             Discover your skills, identify your skill gaps,
@@ -49,18 +85,24 @@ function Home() {
             to your dream career.
           </p>
 
+
           <div className="hero-buttons">
 
             <Link to="/careers">
+
               <button className="primary-btn">
                 Get Started
               </button>
+
             </Link>
 
+
             <Link to="/careers">
+
               <button className="secondary-btn">
                 Explore Careers
               </button>
+
             </Link>
 
           </div>
@@ -69,22 +111,41 @@ function Home() {
 
 
         {/* Career Progress Card */}
+
         <div className="hero-card">
 
           <div className="card-header">
-            <h3>Career Progress</h3>
-            <span>2026</span>
+
+            <h3>
+              Career Progress
+            </h3>
+
+            <span>
+              2026
+            </span>
+
           </div>
+
 
           <div className="progress-item">
 
             <div className="progress-info">
-              <span>Python</span>
-              <span>85%</span>
+
+              <span>
+                Python
+              </span>
+
+              <span>
+                85%
+              </span>
+
             </div>
 
+
             <div className="progress-bar">
+
               <div className="progress-fill python"></div>
+
             </div>
 
           </div>
@@ -93,12 +154,22 @@ function Home() {
           <div className="progress-item">
 
             <div className="progress-info">
-              <span>SQL</span>
-              <span>70%</span>
+
+              <span>
+                SQL
+              </span>
+
+              <span>
+                70%
+              </span>
+
             </div>
 
+
             <div className="progress-bar">
+
               <div className="progress-fill sql"></div>
+
             </div>
 
           </div>
@@ -107,12 +178,22 @@ function Home() {
           <div className="progress-item">
 
             <div className="progress-info">
-              <span>Machine Learning</span>
-              <span>45%</span>
+
+              <span>
+                Machine Learning
+              </span>
+
+              <span>
+                45%
+              </span>
+
             </div>
 
+
             <div className="progress-bar">
+
               <div className="progress-fill ml"></div>
+
             </div>
 
           </div>
@@ -120,11 +201,21 @@ function Home() {
 
           <div className="skill-gap">
 
-            <span>💡</span>
+            <span>
+              💡
+            </span>
+
 
             <div>
-              <strong>3 skills to improve</strong>
-              <p>You're getting closer!</p>
+
+              <strong>
+                3 skills to improve
+              </strong>
+
+              <p>
+                You're getting closer!
+              </p>
+
             </div>
 
           </div>
@@ -135,11 +226,15 @@ function Home() {
 
 
       {/* Features */}
+
       <section className="features">
 
         <div className="section-title">
 
-          <p>WHAT CAREERLENS OFFERS</p>
+          <p>
+            WHAT CAREERLENS OFFERS
+          </p>
+
 
           <h2>
             Everything you need to
@@ -152,13 +247,16 @@ function Home() {
 
         <div className="feature-container">
 
+
           <div className="feature-card">
 
             <div className="feature-icon">
               🎯
             </div>
 
-            <h3>Skill Gap Analysis</h3>
+            <h3>
+              Skill Gap Analysis
+            </h3>
 
             <p>
               Understand which skills you already have
@@ -174,7 +272,9 @@ function Home() {
               📊
             </div>
 
-            <h3>Track Your Progress</h3>
+            <h3>
+              Track Your Progress
+            </h3>
 
             <p>
               Monitor your learning journey and
@@ -190,7 +290,9 @@ function Home() {
               💼
             </div>
 
-            <h3>Career Guidance</h3>
+            <h3>
+              Career Guidance
+            </h3>
 
             <p>
               Explore career paths and discover
@@ -199,15 +301,19 @@ function Home() {
 
           </div>
 
+
         </div>
 
       </section>
 
 
       {/* Footer */}
+
       <footer id="about">
 
-        <h3>CareerLens</h3>
+        <h3>
+          CareerLens
+        </h3>
 
         <p>
           Helping students build better careers.
@@ -219,39 +325,86 @@ function Home() {
 
       </footer>
 
+
     </div>
   );
 }
 
 
+
 function App() {
+
+  const [darkMode, setDarkMode] = useState(() => {
+
+    const savedTheme = localStorage.getItem("careerLensTheme");
+
+    return savedTheme === "dark";
+
+  });
+
+
+  useEffect(() => {
+
+    document.body.classList.toggle(
+      "dark-mode",
+      darkMode
+    );
+
+
+    localStorage.setItem(
+      "careerLensTheme",
+      darkMode ? "dark" : "light"
+    );
+
+  }, [darkMode]);
+
 
   return (
 
     <BrowserRouter>
-    <Routes>
 
-  <Route path="/" element={<Home />} />
+      <Routes>
 
-  <Route
-    path="/careers"
-    element={<CareerSelection />}
-  />
+        <Route
+          path="/"
+          element={
+            <Home
+              darkMode={darkMode}
+              setDarkMode={setDarkMode}
+            />
+          }
+        />
 
-  <Route
-    path="/assessment"
-    element={<SkillAssessment />}
-  />
 
-  <Route
-    path="/skill-gap"
-    element={<SkillGap />}
-  />
+        <Route
+          path="/careers"
+          element={<CareerSelection />}
+        />
 
-</Routes>
+
+        <Route
+          path="/assessment"
+          element={<SkillAssessment />}
+        />
+
+
+        <Route
+          path="/skill-gap"
+          element={<SkillGap />}
+        />
+
+
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        />
+
+      </Routes>
+
     </BrowserRouter>
 
   );
 }
+
 
 export default App;

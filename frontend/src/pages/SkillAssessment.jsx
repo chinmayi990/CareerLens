@@ -1,179 +1,207 @@
 import { useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import careerData from "../data/careerData";
 import "./SkillAssessment.css";
 
 function SkillAssessment() {
-
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const career = searchParams.get("career");
+  const careerInfo = careerData[career];
 
   const [selectedSkills, setSelectedSkills] = useState([]);
 
-  const handleSkillChange = (skill) => {
+  if (!careerInfo) {
+    return (
+      <div className="assessment-page">
+        <div className="assessment-error">
+          <h2>Career not found</h2>
+          <p>Please go back and select a valid career.</p>
 
-    if (selectedSkills.includes(skill)) {
+          <button
+            className="assessment-back-btn"
+            onClick={() => navigate("/careers")}
+          >
+            ← Back to Careers
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-      setSelectedSkills(
-        selectedSkills.filter((item) => item !== skill)
-      );
+  const skills = careerInfo.skills;
 
-    } else {
+  const toggleSkill = (skill) => {
+    setSelectedSkills((previousSkills) => {
+      if (previousSkills.includes(skill)) {
+        return previousSkills.filter(
+          (item) => item !== skill
+        );
+      }
 
-      setSelectedSkills([
-        ...selectedSkills,
-        skill
-      ]);
-
-    }
+      return [...previousSkills, skill];
+    });
   };
 
-  const careerSkills = {
-
-    "Data Analyst": [
-      "Excel",
-      "SQL",
-      "Python",
-      "Pandas",
-      "Statistics",
-      "Data Visualization",
-      "Power BI",
-      "Tableau",
-      "Data Cleaning",
-      "MySQL"
-    ],
-
-    "Data Scientist": [
-      "Python",
-      "SQL",
-      "Statistics",
-      "Probability",
-      "Pandas",
-      "NumPy",
-      "Matplotlib",
-      "Seaborn",
-      "Machine Learning",
-      "Scikit-learn",
-      "Regression",
-      "Classification",
-      "Clustering",
-      "Data Visualization",
-      "Feature Engineering"
-    ],
-
-    "ML Engineer": [
-      "Python",
-      "SQL",
-      "Machine Learning",
-      "Scikit-learn",
-      "TensorFlow",
-      "PyTorch",
-      "Deep Learning",
-      "CNN",
-      "Statistics",
-      "Feature Engineering",
-      "Git",
-      "GitHub",
-      "API Development",
-      "Docker"
-    ],
-
-    "AI Engineer": [
-      "Python",
-      "Artificial Intelligence",
-      "Machine Learning",
-      "Deep Learning",
-      "TensorFlow",
-      "PyTorch",
-      "Natural Language Processing",
-      "Computer Vision",
-      "Transformers",
-      "LLMs",
-      "Generative AI",
-      "RAG",
-      "API Development",
-      "Git",
-      "GitHub"
-    ]
-
-  };
-
-  const skills = careerSkills[career] || [];
-
-  const handleContinue = () => {
-
+  const continueToSkillGap = () => {
     navigate("/skill-gap", {
       state: {
-        career: career,
-        selectedSkills: selectedSkills
-      }
+        career,
+        selectedSkills,
+      },
     });
-
   };
+
+  const selectionPercentage =
+    skills.length > 0
+      ? Math.round(
+          (selectedSkills.length / skills.length) * 100
+        )
+      : 0;
 
   return (
     <div className="assessment-page">
-
       <div className="assessment-container">
 
-        <p className="assessment-label">
-          CAREER ASSESSMENT
-        </p>
+        {/* Header */}
+        <div className="assessment-header">
 
-        <h1>Skill Assessment</h1>
+          <button
+            className="back-button"
+            onClick={() => navigate("/careers")}
+          >
+            ← Back to Careers
+          </button>
 
-        <p className="target-career">
-          Target Career: <strong>{career}</strong>
-        </p>
+          <div className="assessment-icon">
+            {careerInfo.icon}
+          </div>
 
-        <div className="assessment-card">
-
-          <h2>What skills do you currently have?</h2>
-
-          <p>
-            Select all the skills you are comfortable working with.
+          <p className="assessment-category">
+            {careerInfo.category}
           </p>
 
-          <p>
-            <strong>{selectedSkills.length}</strong> skills selected
+          <h1>
+            {career} <span>Skill Assessment</span>
+          </h1>
+
+          <p className="assessment-description">
+            {careerInfo.description}
           </p>
+
+        </div>
+
+        {/* Progress */}
+        <div className="assessment-progress-card">
+
+          <div className="progress-text">
+            <div>
+              <strong>Your Skills</strong>
+              <span>
+                {selectedSkills.length} / {skills.length} selected
+              </span>
+            </div>
+
+            <strong>{selectionPercentage}%</strong>
+          </div>
+
+          <div className="assessment-progress-bar">
+            <div
+              className="assessment-progress-fill"
+              style={{
+                width: `${selectionPercentage}%`,
+              }}
+            ></div>
+          </div>
+
+        </div>
+
+        {/* Instructions */}
+        <div className="assessment-instructions">
+          <span>💡</span>
+
+          <div>
+            <strong>Select the skills you already know</strong>
+
+            <p>
+              Choose all the skills you currently have.
+              CareerLens will use your selections to identify
+              your skill gaps.
+            </p>
+          </div>
+        </div>
+
+        {/* Skills */}
+        <div className="skills-section">
+
+          <div className="skills-section-header">
+            <div>
+              <p className="section-label">
+                REQUIRED SKILLS
+              </p>
+
+              <h2>
+                What skills do you have?
+              </h2>
+            </div>
+
+            <span className="skills-count">
+              {skills.length} skills
+            </span>
+          </div>
 
           <div className="skills-grid">
 
-            {skills.map((skill) => (
+            {skills.map((skill) => {
+              const isSelected =
+                selectedSkills.includes(skill);
 
-              <label
-                className="skill-option"
-                key={skill}
-              >
+              return (
+                <button
+                  key={skill}
+                  className={
+                    isSelected
+                      ? "skill-option selected"
+                      : "skill-option"
+                  }
+                  onClick={() => toggleSkill(skill)}
+                >
+                  <span className="skill-check">
+                    {isSelected ? "✓" : ""}
+                  </span>
 
-                <input
-                  type="checkbox"
-                  value={skill}
-                  checked={selectedSkills.includes(skill)}
-                  onChange={() => handleSkillChange(skill)}
-                />
+                  <span>{skill}</span>
+                </button>
+              );
+            })}
 
-                <span>{skill}</span>
+          </div>
+        </div>
 
-              </label>
+        {/* Bottom Action */}
+        <div className="assessment-action">
 
-            ))}
+          <div>
+            <strong>
+              {selectedSkills.length} skills selected
+            </strong>
 
+            <p>
+              You can change your selections anytime.
+            </p>
           </div>
 
           <button
-            className="continue-btn"
-            onClick={handleContinue}
+            className="continue-button"
+            onClick={continueToSkillGap}
           >
-            Continue →
+            Analyze My Skill Gap →
           </button>
 
         </div>
 
       </div>
-
     </div>
   );
 }

@@ -1,71 +1,197 @@
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import careerData from "../data/careerData";
 import "./CareerSelection.css";
 
 function CareerSelection() {
-
   const navigate = useNavigate();
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const careers = Object.entries(careerData);
+
+  const categories = [
+    "All",
+    ...new Set(careers.map(([, career]) => career.category))
+  ];
+
+  const filteredCareers = useMemo(() => {
+    return careers.filter(([careerName, career]) => {
+      const matchesSearch =
+        careerName
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        career.description
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+
+      const matchesCategory =
+        selectedCategory === "All" ||
+        career.category === selectedCategory;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchTerm, selectedCategory, careers]);
+
   const selectCareer = (career) => {
-    navigate(`/assessment?career=${career}`);
+    navigate(`/assessment?career=${encodeURIComponent(career)}`);
   };
 
   return (
     <div className="career-page">
 
-      <h1>What career are you aiming for?</h1>
+      {/* Page Header */}
 
-      <p>
-        Choose your target role to personalize your career journey.
-      </p>
+      <div className="career-header">
+
+        <p className="career-label">
+          EXPLORE CAREER PATHS
+        </p>
+
+        <h1>
+          Find Your <span>Career Direction</span>
+        </h1>
+
+        <p className="career-subtitle">
+          Explore in-demand career paths, understand the skills
+          you need, and choose the direction that fits you best.
+        </p>
+
+      </div>
+
+
+      {/* Search */}
+
+      <div className="career-search">
+
+        <span className="search-icon">
+          🔎
+        </span>
+
+        <input
+          type="text"
+          placeholder="Search careers..."
+          value={searchTerm}
+          onChange={(event) =>
+            setSearchTerm(event.target.value)
+          }
+        />
+
+      </div>
+
+
+      {/* Categories */}
+
+      <div className="category-filter">
+
+        {categories.map((category) => (
+
+          <button
+            key={category}
+            className={
+              selectedCategory === category
+                ? "category-btn active"
+                : "category-btn"
+            }
+            onClick={() =>
+              setSelectedCategory(category)
+            }
+          >
+            {category}
+          </button>
+
+        ))}
+
+      </div>
+
+
+      {/* Career Count */}
+
+      <div className="career-results">
+
+        <p>
+          Showing{" "}
+          <strong>{filteredCareers.length}</strong>{" "}
+          career{filteredCareers.length !== 1 ? "s" : ""}
+        </p>
+
+      </div>
+
+
+      {/* Career Cards */}
 
       <div className="career-grid">
 
-        <div
-          className="career-card"
-          onClick={() => selectCareer("Data Analyst")}
-        >
-          <div className="career-icon">📊</div>
-          <h2>Data Analyst</h2>
-          <p>
-            Analyze data and discover useful insights.
-          </p>
-        </div>
+        {filteredCareers.length > 0 ? (
+
+          filteredCareers.map(([careerName, career]) => (
+
+            <div
+              className="career-card"
+              key={careerName}
+              onClick={() => selectCareer(careerName)}
+            >
+
+              <div className="career-card-top">
+
+                <div className="career-icon">
+                  {career.icon}
+                </div>
+
+                <span className="career-category">
+                  {career.category}
+                </span>
+
+              </div>
 
 
-        <div
-          className="career-card"
-          onClick={() => selectCareer("Data Scientist")}
-        >
-          <div className="career-icon">🤖</div>
-          <h2>Data Scientist</h2>
-          <p>
-            Use data, statistics and machine learning to solve problems.
-          </p>
-        </div>
+              <h2>
+                {careerName}
+              </h2>
 
 
-        <div
-          className="career-card"
-          onClick={() => selectCareer("ML Engineer")}
-        >
-          <div className="career-icon">💻</div>
-          <h2>ML Engineer</h2>
-          <p>
-            Build and deploy machine learning systems.
-          </p>
-        </div>
+              <p>
+                {career.description}
+              </p>
 
 
-        <div
-          className="career-card"
-          onClick={() => selectCareer("AI Engineer")}
-        >
-          <div className="career-icon">🧠</div>
-          <h2>AI Engineer</h2>
-          <p>
-            Build intelligent applications using AI technologies.
-          </p>
-        </div>
+              <div className="career-card-footer">
+
+                <span>
+                  {career.skills.length} skills
+                </span>
+
+                <span className="career-arrow">
+                  →
+                </span>
+
+              </div>
+
+            </div>
+
+          ))
+
+        ) : (
+
+          <div className="no-careers">
+
+            <div>
+              🔍
+            </div>
+
+            <h2>
+              No careers found
+            </h2>
+
+            <p>
+              Try searching for a different career
+              or choose another category.
+            </p>
+
+          </div>
+
+        )}
 
       </div>
 
