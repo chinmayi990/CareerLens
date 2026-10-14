@@ -14,6 +14,7 @@ import SkillAssessment from "./pages/SkillAssessment";
 import SkillGap from "./pages/SkillGap";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function Home({ darkMode, setDarkMode }) {
   return (
@@ -33,10 +34,11 @@ function Home({ darkMode, setDarkMode }) {
 
         <div className="nav-actions">
           <button
+            type="button"
             className="theme-toggle"
-            onClick={() => setDarkMode(!darkMode)}
-            aria-label="Toggle theme"
-            title="Toggle light and dark mode"
+            onClick={() => setDarkMode((current) => !current)}
+            aria-label="Toggle light and dark mode"
+            title="Toggle theme"
           >
             {darkMode ? "☀️" : "🌙"}
           </button>
@@ -102,14 +104,18 @@ function Home({ darkMode, setDarkMode }) {
                   </span>
                   <h3>Progress Overview</h3>
                 </div>
+
                 <span className="preview-icon">📈</span>
               </div>
 
               <div className="preview-score">
                 <div>
                   <span className="score-number">01</span>
-                  <span className="score-caption">Choose a career</span>
+                  <span className="score-caption">
+                    Choose a career
+                  </span>
                 </div>
+
                 <span className="preview-check">✓</span>
               </div>
 
@@ -152,8 +158,12 @@ function Home({ darkMode, setDarkMode }) {
 
         <section className="features-section" id="about">
           <div className="section-heading">
-            <p className="section-label">THE CAREERLENS ADVANTAGE</p>
+            <p className="section-label">
+              THE CAREERLENS ADVANTAGE
+            </p>
+
             <h2>Turn career confusion into clarity.</h2>
+
             <p>
               Everything you need to understand where you are
               and plan where you want to go.
@@ -198,9 +208,11 @@ function Home({ darkMode, setDarkMode }) {
         <Link to="/" className="footer-brand">
           CareerLens
         </Link>
+
         <p>
           A clearer view of your skills. A stronger path to your future.
         </p>
+
         <span>© 2026 CareerLens</span>
       </footer>
     </div>
@@ -214,6 +226,7 @@ function App() {
 
   useEffect(() => {
     document.body.classList.toggle("dark-mode", darkMode);
+
     localStorage.setItem(
       "careerLensTheme",
       darkMode ? "dark" : "light"
@@ -233,16 +246,45 @@ function App() {
           }
         />
 
-        <Route path="/careers" element={<CareerSelection />} />
-        <Route path="/assessment" element={<SkillAssessment />} />
-        <Route path="/skill-gap" element={<SkillGap />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/careers"
+          element={<CareerSelection />}
+        />
+
+        <Route
+          path="/assessment"
+          element={<SkillAssessment />}
+        />
+
+        <Route
+          path="/skill-gap"
+          element={<SkillGap />}
+        />
+
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        />
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/register"
+          element={<Register />}
+        />
 
         <Route
           path="*"
           element={
-            <div style={{ padding: "40px", textAlign: "center" }}>
+            <div
+              style={{
+                padding: "40px",
+                textAlign: "center",
+              }}
+            >
               <h1>Page not found</h1>
               <Link to="/">Return Home</Link>
             </div>
