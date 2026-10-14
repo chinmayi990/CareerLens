@@ -1,370 +1,228 @@
+
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+} from "react-router-dom";
+
 import "./App.css";
 
 import CareerSelection from "./pages/CareerSelection";
 import SkillAssessment from "./pages/SkillAssessment";
 import SkillGap from "./pages/SkillGap";
 import Dashboard from "./pages/Dashboard";
-
+import Login from "./pages/Login";
 
 function Home({ darkMode, setDarkMode }) {
-
   return (
-    <div className="app">
-
-      {/* Navigation */}
-
+    <div className="home-page">
       <nav className="navbar">
-
-        <div className="logo">
-          Career<span>Lens</span>
-        </div>
-
+        <Link to="/" className="logo">
+          <span className="logo-icon">CL</span>
+          <span>CareerLens</span>
+        </Link>
 
         <div className="nav-links">
+          <Link to="/">Home</Link>
+          <Link to="/careers">Careers</Link>
+          <Link to="/dashboard">Dashboard</Link>
+          <a href="#about">About</a>
+        </div>
 
-          <Link to="/">
-            Home
-          </Link>
-
-          <Link to="/careers">
-            Careers
-          </Link>
-
-          <Link to="/dashboard">
-            Dashboard
-          </Link>
-
-          <a href="#about">
-            About
-          </a>
-
-
-          {/* Theme Toggle */}
-
+        <div className="nav-actions">
           <button
             className="theme-toggle"
             onClick={() => setDarkMode(!darkMode)}
-            aria-label="Toggle dark mode"
+            aria-label="Toggle theme"
+            title="Toggle light and dark mode"
           >
             {darkMode ? "☀️" : "🌙"}
           </button>
 
-
-          <button className="login-btn">
+          <Link to="/login" className="login-nav-button">
             Login
-          </button>
-
+          </Link>
         </div>
-
       </nav>
 
-
-      {/* Hero Section */}
-
-      <section className="hero">
-
-        <div className="hero-text">
-
-          <p className="small-heading">
-            YOUR CAREER. YOUR FUTURE.
-          </p>
-
-
-          <h1>
-            Build Your Career
-            <br />
-            With <span>Confidence.</span>
-          </h1>
-
-
-          <p className="description">
-            Discover your skills, identify your skill gaps,
-            and get personalized guidance to move closer
-            to your dream career.
-          </p>
-
-
-          <div className="hero-buttons">
-
-            <Link to="/careers">
-
-              <button className="primary-btn">
-                Get Started
-              </button>
-
-            </Link>
-
-
-            <Link to="/careers">
-
-              <button className="secondary-btn">
-                Explore Careers
-              </button>
-
-            </Link>
-
-          </div>
-
-        </div>
-
-
-        {/* Career Progress Card */}
-
-        <div className="hero-card">
-
-          <div className="card-header">
-
-            <h3>
-              Career Progress
-            </h3>
-
-            <span>
-              2026
-            </span>
-
-          </div>
-
-
-          <div className="progress-item">
-
-            <div className="progress-info">
-
-              <span>
-                Python
-              </span>
-
-              <span>
-                85%
-              </span>
-
+      <main>
+        <section className="hero-section">
+          <div className="hero-content">
+            <div className="hero-badge">
+              <span>✦</span> YOUR CAREER, YOUR FUTURE
             </div>
 
+            <h1>
+              Build Your Career
+              <br />
+              With <span>Confidence.</span>
+            </h1>
 
-            <div className="progress-bar">
+            <p className="hero-description">
+              Discover your ideal career, assess your skills,
+              identify skill gaps, and create a clear path
+              toward your professional goals.
+            </p>
 
-              <div className="progress-fill python"></div>
+            <div className="hero-buttons">
+              <Link to="/careers" className="primary-button">
+                Explore Careers <span>→</span>
+              </Link>
 
+              <Link to="/dashboard" className="secondary-button">
+                View Dashboard
+              </Link>
             </div>
 
-          </div>
-
-
-          <div className="progress-item">
-
-            <div className="progress-info">
-
-              <span>
-                SQL
-              </span>
-
-              <span>
-                70%
-              </span>
-
-            </div>
-
-
-            <div className="progress-bar">
-
-              <div className="progress-fill sql"></div>
-
-            </div>
-
-          </div>
-
-
-          <div className="progress-item">
-
-            <div className="progress-info">
-
-              <span>
-                Machine Learning
-              </span>
-
-              <span>
-                45%
-              </span>
-
-            </div>
-
-
-            <div className="progress-bar">
-
-              <div className="progress-fill ml"></div>
-
-            </div>
-
-          </div>
-
-
-          <div className="skill-gap">
-
-            <span>
-              💡
-            </span>
-
-
-            <div>
-
-              <strong>
-                3 skills to improve
-              </strong>
+            <div className="hero-trust">
+              <div className="trust-avatars">
+                <span>🎓</span>
+                <span>💻</span>
+                <span>🚀</span>
+              </div>
 
               <p>
-                You're getting closer!
+                <strong>One step at a time.</strong>
+                <br />
+                Build skills for the career you want.
               </p>
-
             </div>
-
           </div>
 
-        </div>
+          <div className="hero-visual">
+            <div className="hero-glow"></div>
 
-      </section>
+            <div className="career-preview-card">
+              <div className="preview-top">
+                <div>
+                  <span className="preview-label">
+                    YOUR CAREER JOURNEY
+                  </span>
+                  <h3>Progress Overview</h3>
+                </div>
+                <span className="preview-icon">📈</span>
+              </div>
 
+              <div className="preview-score">
+                <div>
+                  <span className="score-number">01</span>
+                  <span className="score-caption">Choose a career</span>
+                </div>
+                <span className="preview-check">✓</span>
+              </div>
 
-      {/* Features */}
+              <div className="preview-progress-track">
+                <div className="preview-progress-fill"></div>
+              </div>
 
-      <section className="features">
+              <div className="preview-stat-grid">
+                <div className="preview-stat">
+                  <span>🎯</span>
+                  <strong>20</strong>
+                  <small>Career paths</small>
+                </div>
 
-        <div className="section-title">
+                <div className="preview-stat">
+                  <span>🧠</span>
+                  <strong>Skills</strong>
+                  <small>Self-assessment</small>
+                </div>
+              </div>
 
-          <p>
-            WHAT CAREERLENS OFFERS
-          </p>
-
-
-          <h2>
-            Everything you need to
-            <br />
-            grow your career.
-          </h2>
-
-        </div>
-
-
-        <div className="feature-container">
-
-
-          <div className="feature-card">
-
-            <div className="feature-icon">
-              🎯
+              <div className="preview-note">
+                <span>💡</span>
+                <p>
+                  Your next opportunity starts with
+                  understanding your skills.
+                </p>
+              </div>
             </div>
 
-            <h3>
-              Skill Gap Analysis
-            </h3>
+            <div className="floating-chip chip-one">
+              <span>✨</span> Discover your strengths
+            </div>
 
+            <div className="floating-chip chip-two">
+              <span>🚀</span> Plan your next step
+            </div>
+          </div>
+        </section>
+
+        <section className="features-section" id="about">
+          <div className="section-heading">
+            <p className="section-label">THE CAREERLENS ADVANTAGE</p>
+            <h2>Turn career confusion into clarity.</h2>
             <p>
-              Understand which skills you already have
-              and which skills you need to develop.
+              Everything you need to understand where you are
+              and plan where you want to go.
             </p>
-
           </div>
 
+          <div className="features-grid">
+            <article className="feature-card">
+              <div className="feature-icon purple">🧭</div>
+              <h3>Explore Careers</h3>
+              <p>
+                Discover career paths and explore the skills
+                required for each role.
+              </p>
+              <Link to="/careers">Explore paths →</Link>
+            </article>
 
-          <div className="feature-card">
+            <article className="feature-card">
+              <div className="feature-icon blue">🧠</div>
+              <h3>Assess Your Skills</h3>
+              <p>
+                Select the skills you already know and
+                understand your current strengths.
+              </p>
+              <Link to="/careers">Start assessment →</Link>
+            </article>
 
-            <div className="feature-icon">
-              📊
-            </div>
-
-            <h3>
-              Track Your Progress
-            </h3>
-
-            <p>
-              Monitor your learning journey and
-              visualize your career progress.
-            </p>
-
+            <article className="feature-card">
+              <div className="feature-icon green">📊</div>
+              <h3>Find Skill Gaps</h3>
+              <p>
+                Identify skills to develop and receive
+                practical learning recommendations.
+              </p>
+              <Link to="/careers">Analyze skills →</Link>
+            </article>
           </div>
+        </section>
+      </main>
 
-
-          <div className="feature-card">
-
-            <div className="feature-icon">
-              💼
-            </div>
-
-            <h3>
-              Career Guidance
-            </h3>
-
-            <p>
-              Explore career paths and discover
-              what skills employers are looking for.
-            </p>
-
-          </div>
-
-
-        </div>
-
-      </section>
-
-
-      {/* Footer */}
-
-      <footer id="about">
-
-        <h3>
+      <footer className="home-footer">
+        <Link to="/" className="footer-brand">
           CareerLens
-        </h3>
-
+        </Link>
         <p>
-          Helping students build better careers.
+          A clearer view of your skills. A stronger path to your future.
         </p>
-
-        <p className="copyright">
-          © 2026 CareerLens. Built with React.
-        </p>
-
+        <span>© 2026 CareerLens</span>
       </footer>
-
-
     </div>
   );
 }
 
-
-
 function App() {
-
   const [darkMode, setDarkMode] = useState(() => {
-
-    const savedTheme = localStorage.getItem("careerLensTheme");
-
-    return savedTheme === "dark";
-
+    return localStorage.getItem("careerLensTheme") === "dark";
   });
 
-
   useEffect(() => {
-
-    document.body.classList.toggle(
-      "dark-mode",
-      darkMode
-    );
-
-
+    document.body.classList.toggle("dark-mode", darkMode);
     localStorage.setItem(
       "careerLensTheme",
       darkMode ? "dark" : "light"
     );
-
   }, [darkMode]);
 
-
   return (
-
     <BrowserRouter>
-
       <Routes>
-
         <Route
           path="/"
           element={
@@ -375,36 +233,24 @@ function App() {
           }
         />
 
+        <Route path="/careers" element={<CareerSelection />} />
+        <Route path="/assessment" element={<SkillAssessment />} />
+        <Route path="/skill-gap" element={<SkillGap />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
 
         <Route
-          path="/careers"
-          element={<CareerSelection />}
+          path="*"
+          element={
+            <div style={{ padding: "40px", textAlign: "center" }}>
+              <h1>Page not found</h1>
+              <Link to="/">Return Home</Link>
+            </div>
+          }
         />
-
-
-        <Route
-          path="/assessment"
-          element={<SkillAssessment />}
-        />
-
-
-        <Route
-          path="/skill-gap"
-          element={<SkillGap />}
-        />
-
-
-        <Route
-          path="/dashboard"
-          element={<Dashboard />}
-        />
-
       </Routes>
-
     </BrowserRouter>
-
   );
 }
-
 
 export default App;
